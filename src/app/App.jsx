@@ -35,7 +35,6 @@ import {
   EncuestaEgresadosForm,
   EncuestaEgresadosEditForm
 } from '../widgets/encuesta_egresado';
-} from '../widgets';
 import './App.css';
 
 function App() {
