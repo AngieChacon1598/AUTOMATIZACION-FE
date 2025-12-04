@@ -325,15 +325,72 @@ export const detallesEgresadosService = {
   // Actualizar detalle
   async updateDetalleEgresado(idDetalle, detalleData) {
     try {
-      const response = await apiClient.put(`${getApiUrl(BACKEND_CONFIG.DETALLE_EGRESADOS_ENDPOINTS.BASE)}/${idDetalle}`, detalleData);
+      console.log(`📝 Intentando actualizar detalle de egresado ID: ${idDetalle}`);
+      console.log(`📦 Datos a enviar:`, detalleData);
+      const url = `${getApiUrl(BACKEND_CONFIG.DETALLE_EGRESADOS_ENDPOINTS.BASE)}/${idDetalle}`;
+      console.log(`📡 URL de actualización: ${url}`);
+      
+      const response = await apiClient.put(url, detalleData);
+      console.log(`✅ Actualización exitosa:`, response.data);
       return {
         success: true,
         data: response.data
       };
     } catch (error) {
+      console.error('❌ Error al actualizar detalle de egresado:', error);
+      console.error('❌ Status:', error.response?.status);
+      console.error('❌ Response data:', error.response?.data);
+      console.error('❌ Error completo:', error);
+      
+      // Manejar diferentes tipos de errores
+      let errorMessage = 'Error al actualizar detalle de egresado';
+      
+      if (error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+        
+        if (status === 400) {
+          // Error de validación - mostrar detalles específicos
+          if (data?.errors) {
+            // Errores de validación por campo
+            const errorFields = Object.keys(data.errors);
+            const errorMessages = errorFields.map(field => {
+              const fieldErrors = Array.isArray(data.errors[field]) 
+                ? data.errors[field].join(', ') 
+                : data.errors[field];
+              return `${field}: ${fieldErrors}`;
+            });
+            errorMessage = `Error de validación:\n${errorMessages.join('\n')}`;
+          } else if (data?.message) {
+            errorMessage = `Error de validación: ${data.message}`;
+          } else if (data?.error) {
+            errorMessage = `Error: ${data.error}`;
+          } else {
+            errorMessage = 'Error de validación. Por favor, verifica que todos los campos sean correctos.';
+          }
+        } else if (status === 404) {
+          errorMessage = 'El detalle de egresado no fue encontrado.';
+        } else if (status === 403) {
+          errorMessage = 'No tienes permisos para actualizar este detalle.';
+        } else if (status === 500) {
+          errorMessage = 'Error interno del servidor. Por favor, intenta más tarde.';
+          if (data?.message) {
+            errorMessage += ` Detalles: ${data.message}`;
+          }
+        } else if (data?.message) {
+          errorMessage = data.message;
+        } else if (data?.error) {
+          errorMessage = data.error;
+        }
+      } else if (error.request) {
+        errorMessage = 'No se pudo conectar con el servidor. Verifica tu conexión a internet.';
+      } else {
+        errorMessage = error.message || 'Error desconocido al actualizar el detalle.';
+      }
+      
       return {
         success: false,
-        error: error.response?.data?.message || 'Error al actualizar detalle de egresado'
+        error: errorMessage
       };
     }
   },

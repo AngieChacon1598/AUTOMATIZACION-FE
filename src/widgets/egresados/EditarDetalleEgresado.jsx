@@ -328,38 +328,70 @@ function EditarDetalleEgresado() {
     try {
       // Si se seleccionó "OTRO", usar el valor de empresa_actual_otro, sino usar empresa_actual
       const empresaActual = formData.empresa_actual === 'OTRO' 
-        ? formData.empresa_actual_otro 
-        : formData.empresa_actual;
+        ? (formData.empresa_actual_otro?.trim() || null)
+        : (formData.empresa_actual || null);
+      
+      // Preparar sueldo_actual - asegurarse de que sea un número válido o null
+      let sueldoActual = null;
+      if (formData.sueldo_actual && formData.sueldo_actual.trim() !== '') {
+        const parsed = parseFloat(formData.sueldo_actual);
+        if (!isNaN(parsed) && isFinite(parsed)) {
+          sueldoActual = parsed;
+        }
+      }
       
       // Solo enviar campos que han cambiado o todos los campos
       const detalleData = {
-        codigo_egresado: formData.codigo_egresado,
-        fecha_egreso: formData.fecha_egreso || null,
-        empresa_actual: empresaActual || null,
-        cargo_actual: formData.cargo_actual || null,
-        pais_residencia: formData.pais_residencia || null,
-        ciudad_residencia: formData.ciudad_residencia || null,
-        fecha_incorporacion: formData.fecha_incorporacion || null,
-        area_trabajo: formData.area_trabajo || null,
-        sueldo_actual: formData.sueldo_actual ? parseFloat(formData.sueldo_actual) : null,
+        codigo_egresado: formData.codigo_egresado || null,
+        fecha_egreso: formData.fecha_egreso?.trim() || null,
+        empresa_actual: empresaActual,
+        cargo_actual: formData.cargo_actual?.trim() || null,
+        pais_residencia: formData.pais_residencia?.trim() || null,
+        ciudad_residencia: formData.ciudad_residencia?.trim() || null,
+        fecha_incorporacion: formData.fecha_incorporacion?.trim() || null,
+        area_trabajo: formData.area_trabajo?.trim() || null,
+        sueldo_actual: sueldoActual,
         estado: formData.estado || 'A'
       };
 
       console.log('📝 Datos a enviar para actualizar:', detalleData);
 
       const result = await updateDetalleEgresado(parseInt(idDetalle), detalleData);
+      console.log('📊 Resultado de la actualización:', result);
 
       if (result.success) {
-        setMessage('Detalle de egresado actualizado exitosamente');
+        setMessage('✅ Detalle de egresado actualizado exitosamente');
         setTimeout(() => {
           navigate('/detalles');
         }, 1500);
       } else {
-        setFormError(result.error || 'Error al actualizar el detalle de egresado');
+        console.error('❌ Error en la actualización:', result.error);
+        // Si el error contiene múltiples líneas (errores de validación), mostrarlo mejor
+        const errorMsg = result.error || 'Error al actualizar el detalle de egresado';
+        setFormError(errorMsg);
+        
+        // Si hay errores de validación específicos, también mostrarlos en los campos
+        if (result.error && result.error.includes('Error de validación')) {
+          // Intentar extraer errores de campos específicos si están disponibles
+          const errorLines = result.error.split('\n');
+          if (errorLines.length > 1) {
+            const fieldErrors = {};
+            errorLines.slice(1).forEach(line => {
+              const match = line.match(/^(\w+):\s*(.+)$/);
+              if (match) {
+                const [, field, message] = match;
+                fieldErrors[field] = message;
+              }
+            });
+            if (Object.keys(fieldErrors).length > 0) {
+              setValidationErrors(prev => ({ ...prev, ...fieldErrors }));
+            }
+          }
+        }
       }
     } catch (err) {
-      console.error('❌ Error al actualizar detalle:', err);
-      setFormError(err.message || 'Ocurrió un error inesperado');
+      console.error('❌ Error inesperado al actualizar detalle:', err);
+      setFormError(err.message || 'Ocurrió un error inesperado. Por favor, intenta nuevamente.');
     } finally {
       setIsSubmitting(false);
     }
