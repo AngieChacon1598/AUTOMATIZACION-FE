@@ -339,9 +339,12 @@ export const detallesEgresadosService = {
   },
 
   // Eliminar lógicamente
-  async deleteDetalleEgresado(idDetalle) {
+  async deleteDetalleEgresado(idDetalle, retryCount = 0) {
+    const maxRetries = 2;
+    const retryDelay = 1000; // 1 segundo
+    
     try {
-      console.log(`🗑️ Intentando eliminar detalle de egresado ID: ${idDetalle}`);
+      console.log(`🗑️ Intentando eliminar detalle de egresado ID: ${idDetalle} (intento ${retryCount + 1}/${maxRetries + 1})`);
       const url = `${getApiUrl(BACKEND_CONFIG.DETALLE_EGRESADOS_ENDPOINTS.BASE)}/${idDetalle}`;
       console.log(`📡 URL de eliminación: ${url}`);
       
@@ -352,6 +355,12 @@ export const detallesEgresadosService = {
         data: response.data
       };
     } catch (error) {
+      // Si es un error 500 y aún tenemos reintentos disponibles, intentar nuevamente
+      if (error.response?.status === 500 && retryCount < maxRetries) {
+        console.warn(`⚠️ Error 500 en intento ${retryCount + 1}, reintentando en ${retryDelay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        return this.deleteDetalleEgresado(idDetalle, retryCount + 1);
+      }
       console.error('❌ Error al eliminar detalle de egresado:', error);
       console.error('❌ Status:', error.response?.status);
       console.error('❌ Response data:', error.response?.data);
@@ -366,7 +375,13 @@ export const detallesEgresadosService = {
         const data = error.response.data;
         
         if (status === 500) {
-          errorMessage = 'Error interno del servidor. Por favor, contacta al administrador o intenta más tarde.';
+          // Verificar si es un error de conexión a la base de datos
+          const errorText = JSON.stringify(data || error.response?.data || '').toLowerCase();
+          if (errorText.includes('ssl connection') || errorText.includes('connection') || errorText.includes('database')) {
+            errorMessage = 'Error de conexión con la base de datos. Por favor, intenta nuevamente en unos momentos.';
+          } else {
+            errorMessage = 'Error interno del servidor. Por favor, contacta al administrador o intenta más tarde.';
+          }
           // Intentar extraer más información del error si está disponible
           if (data?.message) {
             errorMessage += ` Detalles: ${data.message}`;
