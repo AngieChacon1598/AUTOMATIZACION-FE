@@ -12,6 +12,22 @@
   display: flex;
   gap: 24px;
   align-items: flex-start;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .encuestas-layout {
+    flex-direction: column;
+  }
+  
+  .filters-panel {
+    flex: 1;
+    width: 100%;
+  }
+  
+  .table-panel {
+    width: 100%;
+  }
 }
 
 /* Panel izquierdo - Filtros */
@@ -26,6 +42,8 @@
 .table-panel {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .btn-nueva-encuesta {
@@ -139,14 +157,18 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: visible;
   border: 1px solid #e2e8f0;
+  width: 100%;
 }
 
 .unified-table {
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
   background: white;
+  table-layout: auto;
 }
 
 .unified-table thead {
@@ -163,6 +185,39 @@
   letter-spacing: 0.05em;
   border: none;
   white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.unified-table th:nth-child(1) {
+  min-width: 60px;
+  width: 60px;
+}
+
+.unified-table th:nth-child(2) {
+  min-width: 150px;
+  width: 150px;
+}
+
+.unified-table th:nth-child(3) {
+  min-width: 120px;
+  width: 120px;
+}
+
+.unified-table th:nth-child(4) {
+  min-width: 100px;
+  width: 100px;
+}
+
+.unified-table th:nth-child(5) {
+  min-width: 120px;
+  width: 120px;
+}
+
+.unified-table th:nth-child(6) {
+  min-width: 150px;
+  width: 150px;
 }
 
 .unified-table td {
@@ -172,6 +227,36 @@
   color: #333;
   vertical-align: middle;
   white-space: nowrap;
+}
+
+.unified-table td:nth-child(1) {
+  min-width: 60px;
+  width: 60px;
+}
+
+.unified-table td:nth-child(2) {
+  min-width: 150px;
+  width: 150px;
+}
+
+.unified-table td:nth-child(3) {
+  min-width: 120px;
+  width: 120px;
+}
+
+.unified-table td:nth-child(4) {
+  min-width: 100px;
+  width: 100px;
+}
+
+.unified-table td:nth-child(5) {
+  min-width: 120px;
+  width: 120px;
+}
+
+.unified-table td:nth-child(6) {
+  min-width: 150px;
+  width: 150px;
 }
 
 .unified-table tbody tr {
