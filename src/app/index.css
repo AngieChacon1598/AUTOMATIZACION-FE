@@ -1,0 +1,7 @@
+/* Importar estilos adicionales */
+@import '../shared/ux-improvements.css';
+@import '../shared/unified-tables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
