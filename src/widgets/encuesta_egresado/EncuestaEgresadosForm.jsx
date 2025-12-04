@@ -12,10 +12,34 @@ const EncuestaEgresadosForm = () => {
   const { egresados, fetchEgresados } = useEgresados();
   
   const [formData, setFormData] = useState({
+    // Campos requeridos
     codigo_egresado: '',
-    fecha_encuesta: new Date().toISOString().split('T')[0],
-    // Agregar aquí los campos específicos de tu encuesta según el backend
-    // Estos son campos de ejemplo, ajusta según tu modelo de datos
+    fecha_aplicacion: new Date().toISOString().split('T')[0],
+    // Campos opcionales - Situación Laboral
+    trabaja_actualmente: null,
+    tipo_contrato: '',
+    tipo_empleo: '',
+    ingreso_mensual: '',
+    area_trabajo: '',
+    actividad_economica_id: '',
+    relacion_carrera: '',
+    // Campos opcionales - Búsqueda de Empleo
+    medios_busqueda: '',
+    cantidad_empleos_ultimo_ano: 0,
+    cantidad_empleos_carrera: 0,
+    // Campos opcionales - Empresa Actual
+    nombre_empresa_actual: '',
+    nombre_jefe_inmediato: '',
+    telefono_empresa: '',
+    pagina_web_empresa: '',
+    correo_empresa: '',
+    // Campos opcionales - Trabajo Independiente
+    tiene_negocio: false,
+    cantidad_trabajadores: '',
+    tipo_constitucion: '',
+    actividad_economica_negocio_id: '',
+    // Estado
+    estado: 'A'
   });
   
   const [loading, setLoading] = useState(false);
@@ -52,8 +76,8 @@ const EncuestaEgresadosForm = () => {
       errors.codigo_egresado = 'El código de egresado es requerido';
     }
     
-    if (!formData.fecha_encuesta || formData.fecha_encuesta.trim() === '') {
-      errors.fecha_encuesta = 'La fecha de encuesta es requerida';
+    if (!formData.fecha_aplicacion || formData.fecha_aplicacion.trim() === '') {
+      errors.fecha_aplicacion = 'La fecha de aplicación es requerida';
     }
     
     setFieldErrors(errors);
@@ -73,12 +97,34 @@ const EncuestaEgresadosForm = () => {
     setLoading(true);
 
     try {
-      // Preparar datos para enviar (eliminar campos vacíos)
-      const encuestaData = {
-        codigo_egresado: formData.codigo_egresado,
-        fecha_encuesta: formData.fecha_encuesta,
-        // Agregar aquí los demás campos según tu modelo
-      };
+      // Preparar datos para enviar (eliminar campos vacíos y null)
+      const encuestaData = {};
+      
+      // Campos requeridos
+      encuestaData.codigo_egresado = formData.codigo_egresado;
+      encuestaData.fecha_aplicacion = formData.fecha_aplicacion;
+      
+      // Agregar campos opcionales solo si tienen valor
+      if (formData.trabaja_actualmente !== null) encuestaData.trabaja_actualmente = formData.trabaja_actualmente;
+      if (formData.tipo_contrato) encuestaData.tipo_contrato = formData.tipo_contrato;
+      if (formData.tipo_empleo) encuestaData.tipo_empleo = formData.tipo_empleo;
+      if (formData.ingreso_mensual) encuestaData.ingreso_mensual = formData.ingreso_mensual;
+      if (formData.area_trabajo) encuestaData.area_trabajo = formData.area_trabajo;
+      if (formData.actividad_economica_id) encuestaData.actividad_economica_id = parseInt(formData.actividad_economica_id);
+      if (formData.relacion_carrera) encuestaData.relacion_carrera = formData.relacion_carrera;
+      if (formData.medios_busqueda) encuestaData.medios_busqueda = formData.medios_busqueda;
+      if (formData.cantidad_empleos_ultimo_ano !== undefined) encuestaData.cantidad_empleos_ultimo_ano = parseInt(formData.cantidad_empleos_ultimo_ano) || 0;
+      if (formData.cantidad_empleos_carrera !== undefined) encuestaData.cantidad_empleos_carrera = parseInt(formData.cantidad_empleos_carrera) || 0;
+      if (formData.nombre_empresa_actual) encuestaData.nombre_empresa_actual = formData.nombre_empresa_actual;
+      if (formData.nombre_jefe_inmediato) encuestaData.nombre_jefe_inmediato = formData.nombre_jefe_inmediato;
+      if (formData.telefono_empresa) encuestaData.telefono_empresa = formData.telefono_empresa;
+      if (formData.pagina_web_empresa) encuestaData.pagina_web_empresa = formData.pagina_web_empresa;
+      if (formData.correo_empresa) encuestaData.correo_empresa = formData.correo_empresa;
+      if (formData.tiene_negocio !== undefined) encuestaData.tiene_negocio = formData.tiene_negocio;
+      if (formData.cantidad_trabajadores) encuestaData.cantidad_trabajadores = formData.cantidad_trabajadores;
+      if (formData.tipo_constitucion) encuestaData.tipo_constitucion = formData.tipo_constitucion;
+      if (formData.actividad_economica_negocio_id) encuestaData.actividad_economica_negocio_id = parseInt(formData.actividad_economica_negocio_id);
+      if (formData.estado) encuestaData.estado = formData.estado;
 
       console.log('📝 Datos a enviar para crear encuesta:', encuestaData);
 
@@ -158,25 +204,26 @@ const EncuestaEgresadosForm = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="fecha_encuesta">
-                Fecha de Encuesta <span className="required">*</span>
+              <label htmlFor="fecha_aplicacion">
+                Fecha de Aplicación <span className="required">*</span>
               </label>
               <input
                 type="date"
-                id="fecha_encuesta"
-                name="fecha_encuesta"
-                value={formData.fecha_encuesta}
+                id="fecha_aplicacion"
+                name="fecha_aplicacion"
+                value={formData.fecha_aplicacion}
                 onChange={handleChange}
-                className={fieldErrors.fecha_encuesta ? 'error' : ''}
+                className={fieldErrors.fecha_aplicacion ? 'error' : ''}
                 required
               />
-              {fieldErrors.fecha_encuesta && (
-                <span className="field-error">{fieldErrors.fecha_encuesta}</span>
+              {fieldErrors.fecha_aplicacion && (
+                <span className="field-error">{fieldErrors.fecha_aplicacion}</span>
               )}
             </div>
           </div>
 
-          {/* Agregar aquí los demás campos del formulario según tu modelo de encuesta */}
+          {/* Campos opcionales - Se pueden agregar más adelante según necesidad */}
+          {/* Por ahora solo los campos requeridos están visibles */}
           {/* Ejemplo:
           <div className="form-row">
             <div className="form-group">

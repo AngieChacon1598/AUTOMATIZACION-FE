@@ -38,11 +38,13 @@ const EncuestaDetailModal = ({ encuesta, egresadoNombre, onClose }) => {
               <span>{egresadoNombre}</span>
             </div>
             <div className="detail-item">
-              <label><FaCalendarAlt /> Fecha de Encuesta:</label>
+              <label><FaCalendarAlt /> Fecha de Aplicación:</label>
               <span>
-                {encuesta.fecha_encuesta 
-                  ? new Date(encuesta.fecha_encuesta).toLocaleDateString() 
-                  : '-'}
+                {encuesta.fecha_aplicacion 
+                  ? new Date(encuesta.fecha_aplicacion).toLocaleDateString() 
+                  : (encuesta.fecha_encuesta 
+                    ? new Date(encuesta.fecha_encuesta).toLocaleDateString() 
+                    : '-')}
               </span>
             </div>
             <div className="detail-item">
@@ -55,7 +57,7 @@ const EncuestaDetailModal = ({ encuesta, egresadoNombre, onClose }) => {
             {/* Mostrar todos los campos adicionales de la encuesta */}
             {Object.entries(encuesta).map(([key, value]) => {
               // Omitir campos ya mostrados y campos internos
-              if (['id_encuesta', 'codigo_egresado', 'fecha_encuesta', 'estado'].includes(key)) {
+              if (['id_encuesta', 'codigo_egresado', 'fecha_aplicacion', 'fecha_encuesta', 'estado'].includes(key)) {
                 return null;
               }
               

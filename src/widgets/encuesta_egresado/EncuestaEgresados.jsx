@@ -247,29 +247,20 @@ const EncuestaEgresados = () => {
                   </tr>
                 ) : (
                   encuestas.map((encuesta) => {
-                    // Obtener valores de trabaja y tiene_negocio
-                    // Intentar diferentes nombres de campos que el backend podría usar
-                    let trabaja = 'No';
-                    let tieneNegocio = 'No';
+                    // Obtener valores según la estructura real del backend
+                    const trabaja = encuesta.trabaja_actualmente !== undefined 
+                      ? (encuesta.trabaja_actualmente ? 'Sí' : 'No')
+                      : 'No';
                     
-                    if (encuesta.trabaja !== undefined) {
-                      trabaja = encuesta.trabaja ? 'Sí' : 'No';
-                    } else if (encuesta.trabaja_actual !== undefined) {
-                      trabaja = encuesta.trabaja_actual ? 'Sí' : 'No';
-                    } else if (encuesta.estado_laboral === 'trabaja') {
-                      trabaja = 'Sí';
-                    }
+                    const tieneNegocio = encuesta.tiene_negocio !== undefined 
+                      ? (encuesta.tiene_negocio ? 'Sí' : 'No')
+                      : 'No';
                     
-                    if (encuesta.tiene_negocio !== undefined) {
-                      tieneNegocio = encuesta.tiene_negocio ? 'Sí' : 'No';
-                    } else if (encuesta.negocio_propio !== undefined) {
-                      tieneNegocio = encuesta.negocio_propio ? 'Sí' : 'No';
-                    }
-                    
-                    const fechaFormateada = encuesta.fecha_encuesta 
-                      ? new Date(encuesta.fecha_encuesta).toISOString().split('T')[0]
-                      : (encuesta.fecha 
-                        ? new Date(encuesta.fecha).toISOString().split('T')[0]
+                    // El backend usa fecha_aplicacion, no fecha_encuesta
+                    const fechaFormateada = encuesta.fecha_aplicacion 
+                      ? new Date(encuesta.fecha_aplicacion).toISOString().split('T')[0]
+                      : (encuesta.fecha_encuesta 
+                        ? new Date(encuesta.fecha_encuesta).toISOString().split('T')[0]
                         : '-');
                     
                     return (

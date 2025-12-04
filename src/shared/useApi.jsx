@@ -809,11 +809,18 @@ export const useEncuestas = () => {
       });
       
       if (result.success) {
-        setEncuestas(result.data.items || result.data.data || result.data || []);
-        if (result.data.pagination) {
+        // La respuesta del backend es: { encuestas: [...], page, per_page, total, pages }
+        const encuestasData = result.data.encuestas || result.data.items || result.data.data || result.data || [];
+        setEncuestas(Array.isArray(encuestasData) ? encuestasData : []);
+        
+        // Actualizar paginación desde la respuesta
+        if (result.data) {
           setPagination(prev => ({
             ...prev,
-            ...result.data.pagination
+            page: result.data.page || prev.page,
+            per_page: result.data.per_page || prev.per_page,
+            total: result.data.total || 0,
+            total_pages: result.data.pages || result.data.total_pages || 0
           }));
         }
       } else {
