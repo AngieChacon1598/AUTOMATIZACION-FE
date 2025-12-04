@@ -37,7 +37,8 @@ export const BACKEND_CONFIG = {
   // Endpoints de encuestas (6 endpoints CRUD)
   ENCUESTAS_ENDPOINTS: {
     BASE: '/api/crud/encuestas-egresados',
-    RESTORE: '/api/crud/encuestas-egresados'
+    RESTORE: '/api/crud/encuestas-egresados/restaurar',
+    ESTADISTICAS: '/api/crud/encuestas-egresados/estadisticas'
   },
   
   // Endpoints de evaluaciones (6 endpoints CRUD)

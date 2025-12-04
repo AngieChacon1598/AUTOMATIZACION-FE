@@ -593,7 +593,8 @@ export const encuestasEgresadosService = {
   // Restaurar encuesta
   async restoreEncuestaEgresado(idEncuesta) {
     try {
-      const response = await apiClient.put(`${getApiUrl(BACKEND_CONFIG.ENCUESTAS_ENDPOINTS.BASE)}/${idEncuesta}/restaurar`);
+      // El backend usa PATCH /api/crud/encuestas-egresados/restaurar/:id
+      const response = await apiClient.patch(`${getApiUrl(BACKEND_CONFIG.ENCUESTAS_ENDPOINTS.RESTORE)}/${idEncuesta}`);
       return {
         success: true,
         data: response.data
@@ -602,6 +603,23 @@ export const encuestasEgresadosService = {
       return {
         success: false,
         error: error.response?.data?.message || 'Error al restaurar encuesta de egresado'
+      };
+    }
+  },
+
+  // Obtener estadísticas de encuestas
+  async getEstadisticasEncuestas(filters = {}) {
+    try {
+      const url = buildUrlWithParams(getApiUrl(BACKEND_CONFIG.ENCUESTAS_ENDPOINTS.ESTADISTICAS), filters);
+      const response = await apiClient.get(url);
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Error al obtener estadísticas de encuestas'
       };
     }
   }

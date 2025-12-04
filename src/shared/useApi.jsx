@@ -783,3 +783,143 @@ export const useReportes = () => {
     fetchReportes
   };
 };
+
+// Hook para manejar encuestas de egresados
+export const useEncuestas = () => {
+  const [encuestas, setEncuestas] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    per_page: 10,
+    total: 0,
+    total_pages: 0
+  });
+
+  const fetchEncuestas = async (filters = {}) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const { encuestasEgresadosService } = await import('./api/apiService');
+      const result = await encuestasEgresadosService.getEncuestasEgresados({
+        ...filters,
+        page: pagination.page,
+        per_page: pagination.per_page
+      });
+      
+      if (result.success) {
+        setEncuestas(result.data.items || result.data.data || result.data || []);
+        if (result.data.pagination) {
+          setPagination(prev => ({
+            ...prev,
+            ...result.data.pagination
+          }));
+        }
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getEncuesta = async (idEncuesta) => {
+    try {
+      const { encuestasEgresadosService } = await import('./api/apiService');
+      const result = await encuestasEgresadosService.getEncuestaEgresado(idEncuesta);
+      if (result.success) {
+        return { success: true, data: result.data };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
+
+  const createEncuesta = async (encuestaData) => {
+    try {
+      const { encuestasEgresadosService } = await import('./api/apiService');
+      const result = await encuestasEgresadosService.createEncuestaEgresado(encuestaData);
+      if (result.success) {
+        await fetchEncuestas(); // Refrescar lista
+        return { success: true, data: result.data };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
+
+  const updateEncuesta = async (idEncuesta, encuestaData) => {
+    try {
+      const { encuestasEgresadosService } = await import('./api/apiService');
+      const result = await encuestasEgresadosService.updateEncuestaEgresado(idEncuesta, encuestaData);
+      if (result.success) {
+        await fetchEncuestas(); // Refrescar lista
+        return { success: true, data: result.data };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
+
+  const deleteEncuesta = async (idEncuesta) => {
+    try {
+      const { encuestasEgresadosService } = await import('./api/apiService');
+      const result = await encuestasEgresadosService.deleteEncuestaEgresado(idEncuesta);
+      if (result.success) {
+        await fetchEncuestas(); // Refrescar lista
+        return { success: true, data: result.data };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
+
+  const restoreEncuesta = async (idEncuesta) => {
+    try {
+      const { encuestasEgresadosService } = await import('./api/apiService');
+      const result = await encuestasEgresadosService.restoreEncuestaEgresado(idEncuesta);
+      if (result.success) {
+        await fetchEncuestas(); // Refrescar lista
+        return { success: true, data: result.data };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
+
+  const changePage = (newPage) => {
+    setPagination(prev => ({ ...prev, page: newPage }));
+  };
+
+  const changePageSize = (newPageSize) => {
+    setPagination(prev => ({ ...prev, per_page: newPageSize, page: 1 }));
+  };
+
+  return {
+    encuestas,
+    loading,
+    error,
+    pagination,
+    fetchEncuestas,
+    getEncuesta,
+    createEncuesta,
+    updateEncuesta,
+    deleteEncuesta,
+    restoreEncuesta,
+    changePage,
+    changePageSize
+  };
+};

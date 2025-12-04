@@ -63,6 +63,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/encuestas">
+            <FaFileAlt /> Encuestas
+          </Link>
+        </li>
+        <li>
           <Link to="/empresas">
             <FaBriefcase /> Centro Laboral
           </Link>

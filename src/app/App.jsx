@@ -30,6 +30,12 @@ import {
   Encuestas,
   EncuestaFormulario
 } from '../widgets';
+import {
+  EncuestaEgresados,
+  EncuestaEgresadosForm,
+  EncuestaEgresadosEditForm
+} from '../widgets/encuesta_egresado';
+} from '../widgets';
 import './App.css';
 
 function App() {
@@ -100,6 +106,39 @@ function App() {
             />
             <Route 
               path="/encuestas" 
+              element={
+                <ProtectedRoute>
+                  <Navbar />
+                  <div className="container">
+                    <EncuestaEgresados />
+                  </div>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/encuestas/nueva" 
+              element={
+                <ProtectedRoute>
+                  <Navbar />
+                  <div className="container">
+                    <EncuestaEgresadosForm />
+                  </div>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/encuestas/editar/:idEncuesta" 
+              element={
+                <ProtectedRoute>
+                  <Navbar />
+                  <div className="container">
+                    <EncuestaEgresadosEditForm />
+                  </div>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/encuestas/tipos" 
               element={
                 <ProtectedRoute>
                   <Navbar />
