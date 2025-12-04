@@ -341,15 +341,60 @@ export const detallesEgresadosService = {
   // Eliminar lógicamente
   async deleteDetalleEgresado(idDetalle) {
     try {
-      const response = await apiClient.delete(`${getApiUrl(BACKEND_CONFIG.DETALLE_EGRESADOS_ENDPOINTS.BASE)}/${idDetalle}`);
+      console.log(`🗑️ Intentando eliminar detalle de egresado ID: ${idDetalle}`);
+      const url = `${getApiUrl(BACKEND_CONFIG.DETALLE_EGRESADOS_ENDPOINTS.BASE)}/${idDetalle}`;
+      console.log(`📡 URL de eliminación: ${url}`);
+      
+      const response = await apiClient.delete(url);
+      console.log(`✅ Eliminación exitosa:`, response.data);
       return {
         success: true,
         data: response.data
       };
     } catch (error) {
+      console.error('❌ Error al eliminar detalle de egresado:', error);
+      console.error('❌ Status:', error.response?.status);
+      console.error('❌ Response data:', error.response?.data);
+      console.error('❌ Error completo:', error);
+      
+      // Manejar diferentes tipos de errores
+      let errorMessage = 'Error al eliminar detalle de egresado';
+      
+      if (error.response) {
+        // El servidor respondió con un código de error
+        const status = error.response.status;
+        const data = error.response.data;
+        
+        if (status === 500) {
+          errorMessage = 'Error interno del servidor. Por favor, contacta al administrador o intenta más tarde.';
+          // Intentar extraer más información del error si está disponible
+          if (data?.message) {
+            errorMessage += ` Detalles: ${data.message}`;
+          } else if (data?.error) {
+            errorMessage += ` Detalles: ${data.error}`;
+          }
+        } else if (status === 404) {
+          errorMessage = 'El detalle de egresado no fue encontrado.';
+        } else if (status === 403) {
+          errorMessage = 'No tienes permisos para eliminar este detalle.';
+        } else if (status === 400) {
+          errorMessage = data?.message || 'Solicitud inválida. Verifica los datos.';
+        } else if (data?.message) {
+          errorMessage = data.message;
+        } else if (data?.error) {
+          errorMessage = data.error;
+        }
+      } else if (error.request) {
+        // La petición se hizo pero no hubo respuesta
+        errorMessage = 'No se pudo conectar con el servidor. Verifica tu conexión a internet.';
+      } else {
+        // Algo más pasó
+        errorMessage = error.message || 'Error desconocido al eliminar el detalle.';
+      }
+      
       return {
         success: false,
-        error: error.response?.data?.message || 'Error al eliminar detalle de egresado'
+        error: errorMessage
       };
     }
   },

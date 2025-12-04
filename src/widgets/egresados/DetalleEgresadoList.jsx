@@ -87,11 +87,16 @@ function DetalleEgresadoList() {
   }, [message]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Estás seguro de eliminar este detalle?')) return;
+    if (!window.confirm('¿Estás seguro de eliminar este detalle?\n\nEl detalle se marcará como inactivo y no aparecerá en la lista de activos, pero podrás restaurarlo desde la vista de inactivos.')) return;
+    
+    console.log(`🗑️ Iniciando eliminación del detalle ID: ${id}`);
+    
     try {
       const result = await deleteDetalleEgresado(id);
+      console.log('📊 Resultado de la eliminación:', result);
+      
       if (result.success) {
-        setMessage('Detalle eliminado correctamente!');
+        setMessage('✅ Detalle eliminado correctamente! Se ha movido a la lista de inactivos.');
         // Recargar todos los detalles después de eliminar
         const filters = {
           estado: filter,
@@ -101,11 +106,12 @@ function DetalleEgresadoList() {
         };
         await fetchDetallesEgresados(filters);
       } else {
-        setMessage(`Error: ${result.error}`);
+        console.error('❌ Error en la eliminación:', result.error);
+        setMessage(`❌ Error: ${result.error}`);
       }
     } catch (error) {
-      console.error('Error al eliminar detalle:', error);
-      setMessage('Error al eliminar el detalle');
+      console.error('❌ Error inesperado al eliminar detalle:', error);
+      setMessage('❌ Error inesperado al eliminar el detalle. Por favor, intenta nuevamente.');
     }
   };
 
