@@ -129,11 +129,13 @@ const EncuestaEgresados = () => {
   }, [message]);
 
   return (
-    <div className="unified-content">
+    <div className="encuestas-container">
       <TopHeader 
         title="Encuestas de Egresados"
         breadcrumb="GESTIÓN > ENCUESTAS"
       />
+      
+      <div className="unified-content">
       
       {message && (
         <div className={`message ${message.includes('Error') ? 'error' : 'success'}`}>
@@ -313,7 +315,7 @@ const EncuestaEgresados = () => {
             </table>
           </div>
 
-          {pagination.total_pages > 1 && (
+          {(pagination.total_pages > 1 || pagination.total > 0) && (
             <div className="pagination">
               <div className="pagination-info">
                 <span>
@@ -330,25 +332,27 @@ const EncuestaEgresados = () => {
                   <option value={100}>100 por página</option>
                 </select>
               </div>
-              <div className="pagination-buttons">
-                <button
-                  onClick={() => changePage(pagination.page - 1)}
-                  disabled={pagination.page === 1}
-                  className="btn-pagination"
-                >
-                  Anterior
-                </button>
-                <span className="page-numbers">
-                  Página {pagination.page} de {pagination.total_pages}
-                </span>
-                <button
-                  onClick={() => changePage(pagination.page + 1)}
-                  disabled={pagination.page >= pagination.total_pages}
-                  className="btn-pagination"
-                >
-                  Siguiente
-                </button>
-              </div>
+              {pagination.total_pages > 1 && (
+                <div className="pagination-buttons">
+                  <button
+                    onClick={() => changePage(pagination.page - 1)}
+                    disabled={pagination.page === 1}
+                    className="btn-pagination"
+                  >
+                    Anterior
+                  </button>
+                  <span className="page-numbers">
+                    Página {pagination.page} de {pagination.total_pages}
+                  </span>
+                  <button
+                    onClick={() => changePage(pagination.page + 1)}
+                    disabled={pagination.page >= pagination.total_pages}
+                    className="btn-pagination"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </>
@@ -362,6 +366,7 @@ const EncuestaEgresados = () => {
           onClose={handleCloseModal}
         />
       )}
+      </div>
     </div>
   );
 };

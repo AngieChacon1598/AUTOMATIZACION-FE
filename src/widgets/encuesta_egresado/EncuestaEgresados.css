@@ -1,11 +1,18 @@
 /* Estilos específicos para el módulo de encuestas de egresados */
 
+/* Contenedor principal */
+.encuestas-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 /* Header de encuestas */
 .content-header-encuestas {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
-  padding: 0 4px;
+  padding: 0;
 }
 
 .header-actions-encuestas {
@@ -43,6 +50,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 24px;
   border: 1px solid #e2e8f0;
+  margin-top: 24px;
 }
 
 .filters-row-encuestas {
@@ -131,11 +139,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   border: 1px solid #e2e8f0;
+  margin-top: 24px;
 }
 
 .unified-table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
 }
 
 .unified-table thead {
@@ -143,33 +153,44 @@
 }
 
 .unified-table th {
-  padding: 14px 16px;
+  padding: 16px 20px;
   text-align: left;
   font-weight: 600;
   font-size: 13px;
   color: white;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
   border: none;
+  white-space: nowrap;
 }
 
 .unified-table td {
-  padding: 12px 16px;
+  padding: 14px 20px;
   border-bottom: 1px solid #e2e8f0;
   font-size: 14px;
   color: #333;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.unified-table tbody tr {
+  transition: background-color 0.2s ease;
 }
 
 .unified-table tbody tr:hover {
-  background-color: #f5f5f5;
+  background-color: #f1f1f1;
 }
 
 .unified-table tbody tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: #f9f9f9;
 }
 
 .unified-table tbody tr:nth-child(even):hover {
-  background-color: #f0f0f0;
+  background-color: #f1f1f1;
+}
+
+.unified-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 /* Botones de acción en la tabla */
@@ -177,56 +198,58 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
 }
 
 .btn-icon-encuestas {
-  width: 32px;
-  height: 32px;
-  display: flex;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 16px;
+  background: transparent;
 }
 
 .btn-view-encuestas {
-  background-color: #e3f2fd;
   color: #1976d2;
 }
 
 .btn-view-encuestas:hover {
-  background-color: #bbdefb;
+  color: #1565c0;
+  transform: translateY(-1px);
 }
 
 .btn-edit-encuestas {
-  background-color: #fff3e0;
-  color: #f57c00;
+  color: #2563eb;
 }
 
 .btn-edit-encuestas:hover {
-  background-color: #ffe0b2;
+  color: #1d4ed8;
+  transform: translateY(-1px);
 }
 
 .btn-delete-encuestas {
-  background-color: #ffebee;
-  color: #d32f2f;
+  color: #dc2626;
 }
 
 .btn-delete-encuestas:hover {
-  background-color: #ffcdd2;
+  color: #b91c1c;
+  transform: translateY(-1px);
 }
 
 .btn-restore-encuestas {
-  background-color: #e8f5e9;
-  color: #388e3c;
+  color: #059669;
 }
 
 .btn-restore-encuestas:hover {
-  background-color: #c8e6c9;
+  color: #047857;
+  transform: translateY(-1px);
 }
 
 .encuesta-detail-modal {
@@ -456,5 +479,92 @@
 .badge.secondary {
   background-color: #e5e7eb;
   color: #374151;
+}
+
+/* Paginación mejorada */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pagination-info span {
+  font-size: 14px;
+  color: #333;
+}
+
+.page-size-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+}
+
+.page-size-select:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-pagination {
+  padding: 8px 16px;
+  border: 1px solid #1976d2;
+  background-color: #fff;
+  color: #1976d2;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-pagination:hover:not(:disabled) {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+.btn-pagination:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f0f0f0;
+  color: #888;
+  border: 1px solid #ccc;
+}
+
+.page-numbers {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Mejorar el layout general */
+.unified-content {
+  padding: 24px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+  font-size: 1.1rem;
 }
 
