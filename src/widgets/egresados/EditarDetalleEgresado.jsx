@@ -341,6 +341,7 @@ function EditarDetalleEgresado() {
       }
       
       // Solo enviar campos que han cambiado o todos los campos
+      // NOTA: No enviar 'estado' - el backend no lo acepta en actualizaciones
       const detalleData = {
         codigo_egresado: formData.codigo_egresado || null,
         fecha_egreso: formData.fecha_egreso?.trim() || null,
@@ -350,8 +351,8 @@ function EditarDetalleEgresado() {
         ciudad_residencia: formData.ciudad_residencia?.trim() || null,
         fecha_incorporacion: formData.fecha_incorporacion?.trim() || null,
         area_trabajo: formData.area_trabajo?.trim() || null,
-        sueldo_actual: sueldoActual,
-        estado: formData.estado || 'A'
+        sueldo_actual: sueldoActual
+        // estado no se envía - el backend no lo acepta en actualizaciones
       };
 
       console.log('📝 Datos a enviar para actualizar:', detalleData);
