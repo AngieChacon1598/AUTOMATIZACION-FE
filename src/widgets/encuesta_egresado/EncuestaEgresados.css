@@ -1,5 +1,234 @@
 /* Estilos específicos para el módulo de encuestas de egresados */
 
+/* Header de encuestas */
+.content-header-encuestas {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  padding: 0 4px;
+}
+
+.header-actions-encuestas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-nueva-encuesta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-nueva-encuesta:hover {
+  background-color: #1565c0;
+  color: white;
+}
+
+/* Filtros de encuestas */
+.filters-section-encuestas {
+  background: #fff;
+  padding: 20px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border: 1px solid #e2e8f0;
+}
+
+.filters-row-encuestas {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-group-encuestas {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 180px;
+  flex: 1;
+}
+
+.filter-group-encuestas label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.filter-input-encuestas,
+.filter-select-encuestas {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.filter-input-encuestas:focus,
+.filter-select-encuestas:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.filter-actions-encuestas {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.btn-filtrar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-filtrar:hover {
+  background-color: #1565c0;
+}
+
+.btn-limpiar {
+  padding: 10px 20px;
+  background-color: white;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-limpiar:hover {
+  background-color: #f5f5f5;
+}
+
+/* Tabla de encuestas */
+.table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.unified-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.unified-table thead {
+  background-color: #1976d2;
+}
+
+.unified-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+}
+
+.unified-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 14px;
+  color: #333;
+}
+
+.unified-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.unified-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.unified-table tbody tr:nth-child(even):hover {
+  background-color: #f0f0f0;
+}
+
+/* Botones de acción en la tabla */
+.action-buttons-encuestas {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-icon-encuestas {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.btn-view-encuestas {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.btn-view-encuestas:hover {
+  background-color: #bbdefb;
+}
+
+.btn-edit-encuestas {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.btn-edit-encuestas:hover {
+  background-color: #ffe0b2;
+}
+
+.btn-delete-encuestas {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.btn-delete-encuestas:hover {
+  background-color: #ffcdd2;
+}
+
+.btn-restore-encuestas {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.btn-restore-encuestas:hover {
+  background-color: #c8e6c9;
+}
+
 .encuesta-detail-modal {
   max-width: 900px;
 }

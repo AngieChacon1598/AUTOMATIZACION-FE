@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaTrashAlt, FaEdit, FaUndo, FaEye, FaTimes, FaPlus, FaListAlt, FaFileAlt } from 'react-icons/fa';
+import { FaTrashAlt, FaEdit, FaUndo, FaEye, FaTimes, FaPlus, FaListAlt, FaFileAlt, FaSearch } from 'react-icons/fa';
 import TopHeader from '../../components/TopHeader';
 import StatusIndicator from '../../components/StatusIndicator';
 import { useEncuestas, useEgresados } from '../../shared/useApi.jsx';
@@ -25,7 +25,9 @@ const EncuestaEgresados = () => {
   
   const [filtros, setFiltros] = useState({
     codigo_egresado: '',
-    fecha_encuesta: ''
+    trabaja: 'todos',
+    tiene_negocio: 'todos',
+    estado: 'todos'
   });
   const [filter, setFilter] = useState('A');
   const [message, setMessage] = useState('');
@@ -56,7 +58,17 @@ const EncuestaEgresados = () => {
   const limpiarFiltros = () => {
     setFiltros({
       codigo_egresado: '',
-      fecha_encuesta: ''
+      trabaja: 'todos',
+      tiene_negocio: 'todos',
+      estado: 'todos'
+    });
+  };
+
+  const handleFiltrar = () => {
+    // Por ahora solo recarga con los filtros actuales
+    fetchEncuestas({
+      estado: filter === 'A' ? 'A' : 'I',
+      ...filtros
     });
   };
 
@@ -119,8 +131,8 @@ const EncuestaEgresados = () => {
   return (
     <div className="unified-content">
       <TopHeader 
-        title="ENCUESTAS DE EGRESADOS"
-        breadcrumb="GESTIÓN > ENCUESTAS DE EGRESADOS"
+        title="Encuestas de Egresados"
+        breadcrumb="GESTIÓN > ENCUESTAS"
       />
       
       {message && (
@@ -132,51 +144,68 @@ const EncuestaEgresados = () => {
         </div>
       )}
 
-      <div className="content-header">
-        <div className="header-actions">
-          <Link to="/encuestas/nueva" className="btn btn-primary">
-            <FaPlus /> Nueva Encuesta
+      <div className="content-header-encuestas">
+        <div className="header-actions-encuestas">
+          <Link to="/encuestas/nueva" className="btn-nueva-encuesta">
+            <FaListAlt /> Nueva encuesta
           </Link>
-        </div>
-        
-        <div className="filter-tabs">
-          <button 
-            className={`filter-tab ${filter === 'A' ? 'active' : ''}`}
-            onClick={() => setFilter('A')}
-          >
-            <FaListAlt /> Activos ({pagination.total || 0})
-          </button>
-          <button 
-            className={`filter-tab ${filter === 'I' ? 'active' : ''}`}
-            onClick={() => setFilter('I')}
-          >
-            <FaListAlt /> Inactivos
-          </button>
         </div>
       </div>
 
-      <div className="filters-section">
-        <div className="filters-row">
-          <div className="filter-group">
-            <label>Código de Egresado:</label>
+      <div className="filters-section-encuestas">
+        <div className="filters-row-encuestas">
+          <div className="filter-group-encuestas">
+            <label>Código egresado</label>
             <input
               type="text"
               value={filtros.codigo_egresado}
               onChange={(e) => handleFiltroChange('codigo_egresado', e.target.value)}
               placeholder="Buscar por código..."
+              className="filter-input-encuestas"
             />
           </div>
-          <div className="filter-group">
-            <label>Fecha de Encuesta:</label>
-            <input
-              type="date"
-              value={filtros.fecha_encuesta}
-              onChange={(e) => handleFiltroChange('fecha_encuesta', e.target.value)}
-            />
+          <div className="filter-group-encuestas">
+            <label>Trabaja</label>
+            <select
+              value={filtros.trabaja}
+              onChange={(e) => handleFiltroChange('trabaja', e.target.value)}
+              className="filter-select-encuestas"
+            >
+              <option value="todos">Trabaja (todos)</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
           </div>
-          <div className="filter-actions">
-            <button onClick={limpiarFiltros} className="btn btn-secondary">
-              Limpiar Filtros
+          <div className="filter-group-encuestas">
+            <label>Tiene Negocio</label>
+            <select
+              value={filtros.tiene_negocio}
+              onChange={(e) => handleFiltroChange('tiene_negocio', e.target.value)}
+              className="filter-select-encuestas"
+            >
+              <option value="todos">Tiene Negocio (todos)</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div className="filter-group-encuestas">
+            <label>Estado</label>
+            <select
+              value={filtros.estado}
+              onChange={(e) => handleFiltroChange('estado', e.target.value)}
+              className="filter-select-encuestas"
+            >
+              <option value="todos">Estado (todos)</option>
+              <option value="A">Activo</option>
+              <option value="I">Inactivo</option>
+            </select>
+          </div>
+          <div className="filter-actions-encuestas">
+            <button onClick={handleFiltrar} className="btn-filtrar">
+              <FaListAlt /> Filtrar
+            </button>
+            <button onClick={limpiarFiltros} className="btn-limpiar">
+              Limpiar
             </button>
           </div>
         </div>
@@ -202,73 +231,92 @@ const EncuestaEgresados = () => {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Código Egresado</th>
-                  <th>Egresado</th>
-                  <th>Fecha Encuesta</th>
-                  <th>Estado</th>
-                  <th>Acciones</th>
+                  <th>CÓDIGO EGRESADO</th>
+                  <th>FECHA</th>
+                  <th>TRABAJA</th>
+                  <th>TIENE NEGOCIO</th>
+                  <th>ACCIONES</th>
                 </tr>
               </thead>
               <tbody>
-                {encuestas.length === 0 ? (
+                {encuestas.length === 0 && !loading ? (
                   <tr>
                     <td colSpan="6" className="no-data">
-                      No hay encuestas {filter === 'A' ? 'activas' : 'inactivas'} disponibles
+                      No hay encuestas disponibles
                     </td>
                   </tr>
                 ) : (
-                  encuestas.map((encuesta) => (
-                    <tr key={encuesta.id_encuesta}>
-                      <td>{encuesta.id_encuesta}</td>
-                      <td>{encuesta.codigo_egresado || '-'}</td>
-                      <td>{getEgresadoNombre(encuesta.codigo_egresado)}</td>
-                      <td>
-                        {encuesta.fecha_encuesta 
-                          ? new Date(encuesta.fecha_encuesta).toLocaleDateString() 
-                          : '-'}
-                      </td>
-                      <td>
-                        <StatusIndicator status={encuesta.estado} />
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          <button
-                            onClick={() => handleViewDetails(encuesta)}
-                            className="btn-icon btn-view"
-                            title="Ver detalles"
-                          >
-                            <FaEye />
-                          </button>
-                          {filter === 'A' ? (
-                            <>
-                              <Link
-                                to={`/encuestas/editar/${encuesta.id_encuesta}`}
-                                className="btn-icon btn-edit"
-                                title="Editar"
-                              >
-                                <FaEdit />
-                              </Link>
+                  encuestas.map((encuesta) => {
+                    // Obtener valores de trabaja y tiene_negocio
+                    // Intentar diferentes nombres de campos que el backend podría usar
+                    let trabaja = 'No';
+                    let tieneNegocio = 'No';
+                    
+                    if (encuesta.trabaja !== undefined) {
+                      trabaja = encuesta.trabaja ? 'Sí' : 'No';
+                    } else if (encuesta.trabaja_actual !== undefined) {
+                      trabaja = encuesta.trabaja_actual ? 'Sí' : 'No';
+                    } else if (encuesta.estado_laboral === 'trabaja') {
+                      trabaja = 'Sí';
+                    }
+                    
+                    if (encuesta.tiene_negocio !== undefined) {
+                      tieneNegocio = encuesta.tiene_negocio ? 'Sí' : 'No';
+                    } else if (encuesta.negocio_propio !== undefined) {
+                      tieneNegocio = encuesta.negocio_propio ? 'Sí' : 'No';
+                    }
+                    
+                    const fechaFormateada = encuesta.fecha_encuesta 
+                      ? new Date(encuesta.fecha_encuesta).toISOString().split('T')[0]
+                      : (encuesta.fecha 
+                        ? new Date(encuesta.fecha).toISOString().split('T')[0]
+                        : '-');
+                    
+                    return (
+                      <tr key={encuesta.id_encuesta || encuesta.id}>
+                        <td>{encuesta.id_encuesta || encuesta.id}</td>
+                        <td>{encuesta.codigo_egresado || encuesta.codigo || '-'}</td>
+                        <td>{fechaFormateada}</td>
+                        <td>{trabaja}</td>
+                        <td>{tieneNegocio}</td>
+                        <td>
+                          <div className="action-buttons-encuestas">
+                            <button
+                              onClick={() => handleViewDetails(encuesta)}
+                              className="btn-icon-encuestas btn-view-encuestas"
+                              title="Ver detalles"
+                            >
+                              <FaEye />
+                            </button>
+                            <Link
+                              to={`/encuestas/editar/${encuesta.id_encuesta || encuesta.id}`}
+                              className="btn-icon-encuestas btn-edit-encuestas"
+                              title="Editar"
+                            >
+                              <FaEdit />
+                            </Link>
+                            {(encuesta.estado === 'A' || !encuesta.estado) ? (
                               <button
-                                onClick={() => handleDeleteEncuesta(encuesta.id_encuesta)}
-                                className="btn-icon btn-delete"
+                                onClick={() => handleDeleteEncuesta(encuesta.id_encuesta || encuesta.id)}
+                                className="btn-icon-encuestas btn-delete-encuestas"
                                 title="Eliminar"
                               >
                                 <FaTrashAlt />
                               </button>
-                            </>
-                          ) : (
-                            <button
-                              onClick={() => handleRestoreEncuesta(encuesta.id_encuesta)}
-                              className="btn-icon btn-restore"
-                              title="Restaurar"
-                            >
-                              <FaUndo />
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                            ) : (
+                              <button
+                                onClick={() => handleRestoreEncuesta(encuesta.id_encuesta || encuesta.id)}
+                                className="btn-icon-encuestas btn-restore-encuestas"
+                                title="Restaurar"
+                              >
+                                <FaUndo />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
