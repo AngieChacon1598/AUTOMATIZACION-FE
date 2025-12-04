@@ -146,72 +146,73 @@ const EncuestaEgresados = () => {
         </div>
       )}
 
-      <div className="content-header-encuestas">
-        <div className="header-actions-encuestas">
+      <div className="encuestas-layout">
+        {/* Panel izquierdo - Filtros */}
+        <div className="filters-panel">
           <Link to="/encuestas/nueva" className="btn-nueva-encuesta">
-            <FaListAlt /> Nueva encuesta
+            <FaFileAlt /> Nueva encuesta
           </Link>
-        </div>
-      </div>
 
-      <div className="filters-section-encuestas">
-        <div className="filters-row-encuestas">
-          <div className="filter-group-encuestas">
-            <label>Código egresado</label>
-            <input
-              type="text"
-              value={filtros.codigo_egresado}
-              onChange={(e) => handleFiltroChange('codigo_egresado', e.target.value)}
-              placeholder="Buscar por código..."
-              className="filter-input-encuestas"
-            />
-          </div>
-          <div className="filter-group-encuestas">
-            <label>Trabaja</label>
-            <select
-              value={filtros.trabaja}
-              onChange={(e) => handleFiltroChange('trabaja', e.target.value)}
-              className="filter-select-encuestas"
-            >
-              <option value="todos">Trabaja (todos)</option>
-              <option value="si">Sí</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-          <div className="filter-group-encuestas">
-            <label>Tiene Negocio</label>
-            <select
-              value={filtros.tiene_negocio}
-              onChange={(e) => handleFiltroChange('tiene_negocio', e.target.value)}
-              className="filter-select-encuestas"
-            >
-              <option value="todos">Tiene Negocio (todos)</option>
-              <option value="si">Sí</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-          <div className="filter-group-encuestas">
-            <label>Estado</label>
-            <select
-              value={filtros.estado}
-              onChange={(e) => handleFiltroChange('estado', e.target.value)}
-              className="filter-select-encuestas"
-            >
-              <option value="todos">Estado (todos)</option>
-              <option value="A">Activo</option>
-              <option value="I">Inactivo</option>
-            </select>
-          </div>
-          <div className="filter-actions-encuestas">
-            <button onClick={handleFiltrar} className="btn-filtrar">
-              <FaListAlt /> Filtrar
-            </button>
-            <button onClick={limpiarFiltros} className="btn-limpiar">
-              Limpiar
-            </button>
+          <div className="filters-section-encuestas">
+            <div className="filter-group-encuestas">
+              <label>Código egresado</label>
+              <input
+                type="text"
+                value={filtros.codigo_egresado}
+                onChange={(e) => handleFiltroChange('codigo_egresado', e.target.value)}
+                placeholder="Buscar por código..."
+                className="filter-input-encuestas"
+              />
+            </div>
+            <div className="filter-group-encuestas">
+              <label>Trabaja</label>
+              <select
+                value={filtros.trabaja}
+                onChange={(e) => handleFiltroChange('trabaja', e.target.value)}
+                className="filter-select-encuestas"
+              >
+                <option value="todos">Trabaja (todos)</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div className="filter-group-encuestas">
+              <label>Tiene Negocio</label>
+              <select
+                value={filtros.tiene_negocio}
+                onChange={(e) => handleFiltroChange('tiene_negocio', e.target.value)}
+                className="filter-select-encuestas"
+              >
+                <option value="todos">Tiene Negocio (todos)</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div className="filter-group-encuestas">
+              <label>Estado</label>
+              <select
+                value={filtros.estado}
+                onChange={(e) => handleFiltroChange('estado', e.target.value)}
+                className="filter-select-encuestas"
+              >
+                <option value="todos">Estado (todos)</option>
+                <option value="A">Activo</option>
+                <option value="I">Inactivo</option>
+              </select>
+            </div>
+            <div className="filter-actions-encuestas">
+              <button onClick={handleFiltrar} className="btn-filtrar">
+                <FaSearch /> Filtrar
+              </button>
+              <button onClick={limpiarFiltros} className="btn-limpiar">
+                Limpiar
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+
+        {/* Panel derecho - Tabla */}
+        <div className="table-panel">
 
       {loading && (
         <div className="loading-container">
@@ -226,9 +227,51 @@ const EncuestaEgresados = () => {
         </div>
       )}
 
-      {!loading && !error && (
-        <>
-          <div className="table-container">
+          {!loading && !error && (
+            <>
+              {/* Paginación arriba */}
+              {(pagination.total_pages > 1 || pagination.total > 0) && (
+                <div className="pagination-top">
+                  <div className="pagination-info">
+                    <span>
+                      Mostrando {(pagination.page - 1) * pagination.per_page + 1} - {Math.min(pagination.page * pagination.per_page, pagination.total)} de {pagination.total}
+                    </span>
+                    <select
+                      value={pagination.per_page}
+                      onChange={(e) => changePageSize(parseInt(e.target.value))}
+                      className="page-size-select"
+                    >
+                      <option value={10}>10 por página</option>
+                      <option value={25}>25 por página</option>
+                      <option value={50}>50 por página</option>
+                      <option value={100}>100 por página</option>
+                    </select>
+                  </div>
+                  {pagination.total_pages > 1 && (
+                    <div className="pagination-buttons">
+                      <button
+                        onClick={() => changePage(pagination.page - 1)}
+                        disabled={pagination.page === 1}
+                        className="btn-pagination"
+                      >
+                        Anterior
+                      </button>
+                      <span className="page-numbers">
+                        Página {pagination.page} de {pagination.total_pages}
+                      </span>
+                      <button
+                        onClick={() => changePage(pagination.page + 1)}
+                        disabled={pagination.page >= pagination.total_pages}
+                        className="btn-pagination"
+                      >
+                        Siguiente
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="table-container">
             <table className="unified-table">
               <thead>
                 <tr>
@@ -314,49 +357,10 @@ const EncuestaEgresados = () => {
               </tbody>
             </table>
           </div>
-
-          {(pagination.total_pages > 1 || pagination.total > 0) && (
-            <div className="pagination">
-              <div className="pagination-info">
-                <span>
-                  Mostrando {(pagination.page - 1) * pagination.per_page + 1} - {Math.min(pagination.page * pagination.per_page, pagination.total)} de {pagination.total}
-                </span>
-                <select
-                  value={pagination.per_page}
-                  onChange={(e) => changePageSize(parseInt(e.target.value))}
-                  className="page-size-select"
-                >
-                  <option value={10}>10 por página</option>
-                  <option value={25}>25 por página</option>
-                  <option value={50}>50 por página</option>
-                  <option value={100}>100 por página</option>
-                </select>
-              </div>
-              {pagination.total_pages > 1 && (
-                <div className="pagination-buttons">
-                  <button
-                    onClick={() => changePage(pagination.page - 1)}
-                    disabled={pagination.page === 1}
-                    className="btn-pagination"
-                  >
-                    Anterior
-                  </button>
-                  <span className="page-numbers">
-                    Página {pagination.page} de {pagination.total_pages}
-                  </span>
-                  <button
-                    onClick={() => changePage(pagination.page + 1)}
-                    disabled={pagination.page >= pagination.total_pages}
-                    className="btn-pagination"
-                  >
-                    Siguiente
-                  </button>
-                </div>
-              )}
-            </div>
+            </>
           )}
-        </>
-      )}
+        </div>
+      </div>
 
       {/* Modal de detalles */}
       {showDetailModal && selectedEncuesta && (

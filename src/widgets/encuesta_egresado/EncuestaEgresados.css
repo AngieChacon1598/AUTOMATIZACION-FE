@@ -7,34 +7,43 @@
   margin: 0 auto;
 }
 
-/* Header de encuestas */
-.content-header-encuestas {
+/* Layout de dos columnas */
+.encuestas-layout {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-  padding: 0;
+  gap: 24px;
+  align-items: flex-start;
 }
 
-.header-actions-encuestas {
+/* Panel izquierdo - Filtros */
+.filters-panel {
+  flex: 0 0 320px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 16px;
+}
+
+/* Panel derecho - Tabla */
+.table-panel {
+  flex: 1;
+  min-width: 0;
 }
 
 .btn-nueva-encuesta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   background-color: #1976d2;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s;
+  width: 100%;
 }
 
 .btn-nueva-encuesta:hover {
@@ -48,24 +57,17 @@
   padding: 20px 24px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 24px;
   border: 1px solid #e2e8f0;
-  margin-top: 24px;
-}
-
-.filters-row-encuestas {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
 .filter-group-encuestas {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 180px;
-  flex: 1;
+  width: 100%;
 }
 
 .filter-group-encuestas label {
@@ -94,7 +96,7 @@
 .filter-actions-encuestas {
   display: flex;
   gap: 10px;
-  align-items: flex-end;
+  margin-top: 8px;
 }
 
 .btn-filtrar {
@@ -139,7 +141,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   border: 1px solid #e2e8f0;
-  margin-top: 24px;
 }
 
 .unified-table {
@@ -479,6 +480,19 @@
 .badge.secondary {
   background-color: #e5e7eb;
   color: #374151;
+}
+
+/* Paginación arriba de la tabla */
+.pagination-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
 }
 
 /* Paginación mejorada */
